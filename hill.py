@@ -9,19 +9,16 @@ class Hill():
         return 1
     
     def cofactor(self, mat):
-        if np.shape(mat) == (2,2):
-            return mat[0][0] * mat[1][1] - mat[1][0] * mat[0][1]
-        else:
-            x_shape, y_shape = np.shape(mat)
-            raw_mat = np.array(mat)
-            res_mat = np.zeros((x_shape, y_shape), int)
-            for i in range(x_shape):
-                for j in range(y_shape):
-                    smol_mat = np.delete(raw_mat, i, 0)
-                    smol_mat = np.delete(smol_mat, j, 1)
-                    res_mat[i][j] = ((-1) ** (i + j + 2)) * int(round(np.linalg.det(smol_mat)))
-            # res_mat = 
-            return res_mat
+        x_shape, y_shape = np.shape(mat)
+        raw_mat = np.array(mat)
+        res_mat = np.zeros((x_shape, y_shape), int)
+        for i in range(x_shape):
+            for j in range(y_shape):
+                smol_mat = np.delete(raw_mat, i, 0)
+                smol_mat = np.delete(smol_mat, j, 1)
+                res_mat[i][j] = ((-1) ** (i + j + 2)) * int(round(np.linalg.det(smol_mat)))
+        # res_mat = 
+        return res_mat
 
 
     def calc_decrypt_key(self, raw_mat, det_inv):
@@ -36,7 +33,7 @@ class Hill():
                 val = val % 26
                 temp.append(val)
             res.append(temp)
-        # print(res)
+        print(res)
         return np.array(res)
 
 
@@ -130,15 +127,23 @@ class Hill():
             return None
         text_arr = self.split_text(text, n)
         text_arr = self.mat_char2ord(text_arr)
-        det_inv = self.modInverse(np.linalg.det(mat)%26, 26)
+        det_inv = self.modInverse(int(round(np.linalg.det(mat)))%26, 26)
         decrypt_key_mat = self.calc_decrypt_key(mat, det_inv)
         # decrypt_key_mat = self.cofactor(mat)
         # print(decrypt_key_mat)
+        print("Multiplicative Inverse of Determinant: {}".format(det_inv))
         res_mat = []
         for parts in text_arr:
             mult = np.array(parts)
             mult = decrypt_key_mat.dot(mult)
             mult %= 26
             res_mat.append(list(mult))
-        print(self.mat_ord2char(res_mat))
-        pass
+        return self.mat_ord2char(res_mat)
+        
+        
+    def matrix2string(self, mat):
+        res_mat = []
+        for i in range(len(mat)):
+            for j in range(len(mat[i])):
+                res_mat.append(mat[i][j])
+        return ''.join(res_mat)
