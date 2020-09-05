@@ -13,12 +13,19 @@ print(PlayfairEngine.get_pos(PlayfairEngine.text_mat[1]))
  """
 
 import affine as affine_cipher
-af = affine_cipher.Affine()
-af.input_keys()
-if (af.check_coprime(af.key_a)):
-    print('Keys are legal')
-    text = str(input('Input text to be encrypted: '))
-    e_text = af.encrypt(text, af.key_a, af.key_b)
-    d_text = af.decrypt(e_text, af.key_a, af.key_b)
-else:
-    print('\'a\' must be coprime with 26')
+import vigenere as vigenere_cipher
+# af = affine_cipher.Affine()
+# af.input_keys()
+# if (af.check_coprime(af.key_a)):
+#     print('Keys are legal')
+#     text = str(input('Input text to be encrypted: '))
+#     e_text = af.encrypt(text, af.key_a, af.key_b)
+#     d_text = af.decrypt(e_text, af.key_a, af.key_b)
+# else:
+#     print('\'a\' must be coprime with 26')
+
+vig = vigenere_cipher.Vigenere()
+vig.key = "SONY"
+text = "thisplaintext"
+e_text = vig.encrypt(text)
+d_text = vig.decrypt(e_text)
