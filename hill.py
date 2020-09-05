@@ -1,27 +1,43 @@
 import numpy as np
 ord_A = ord('A')
 class Hill():
-    def create_matrix(self, mat):
-        pass
-
     def modInverse(self, a, m) : 
         a = a % m; 
         for x in range(1, m) : 
             if ((a * x) % m == 1) : 
                 return x 
         return 1
-
+    
     def cofactor(self, mat):
-        
-        pass
+        if np.shape(mat) == (2,2):
+            return mat[0][0] * mat[1][1] - mat[1][0] * mat[0][1]
+        else:
+            x_shape, y_shape = np.shape(mat)
+            raw_mat = np.array(mat)
+            res_mat = np.zeros((x_shape, y_shape), int)
+            for i in range(x_shape):
+                for j in range(y_shape):
+                    smol_mat = np.delete(raw_mat, i, 0)
+                    smol_mat = np.delete(smol_mat, j, 1)
+                    res_mat[i][j] = ((-1) ** (i + j + 2)) * int(round(np.linalg.det(smol_mat)))
+            # res_mat = 
+            return res_mat
 
-    def cofactor_matrix(self, mat):
-        pass
 
-    def adj_mat(self, mat):
-        numpy_mat = np.matrix(mat)
-        print((numpy_mat * np.linalg.det(mat))%26)
-        return numpy_mat.getH()
+    def calc_decrypt_key(self, raw_mat, det_inv):
+        mat = self.cofactor(raw_mat).T
+        # print(mat)
+        res = []
+        for i in range(len(mat)):
+            temp = []
+            for j in range(len(mat[i])):
+                val = (mat[i][j] % 26)
+                val = val * det_inv
+                val = val % 26
+                temp.append(val)
+            res.append(temp)
+        # print(res)
+        return np.array(res)
 
 
     def split_text(self, text: str, n):
@@ -115,6 +131,14 @@ class Hill():
         text_arr = self.split_text(text, n)
         text_arr = self.mat_char2ord(text_arr)
         det_inv = self.modInverse(np.linalg.det(mat)%26, 26)
-        decrypt_key_mat = (det_inv * self.adj_mat(mat))%26
+        decrypt_key_mat = self.calc_decrypt_key(mat, det_inv)
+        # decrypt_key_mat = self.cofactor(mat)
         # print(decrypt_key_mat)
+        res_mat = []
+        for parts in text_arr:
+            mult = np.array(parts)
+            mult = decrypt_key_mat.dot(mult)
+            mult %= 26
+            res_mat.append(list(mult))
+        print(self.mat_ord2char(res_mat))
         pass

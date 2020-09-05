@@ -25,6 +25,7 @@ else:
 
 import hill as hill_cipher
 invertible_mat = [[6,24,1],[13,16,10],[20,17,14]]
+inv_mat_2 = [[17,17,5], [21,18,21], [2,2,19]]
 non_invertible_mat = [[9,6], [12,8]]
 
 hc = hill_cipher.Hill()
@@ -34,9 +35,9 @@ rev = hc.mat_ord2char(ord_mat)
 print(text_mat)
 print(ord_mat)
 print(rev)
-encrypt = hc.encrypt("ARUNGAGAMANIBUD", 3, invertible_mat)
+encrypt = hc.encrypt("ARUNGAGAMANIBUD", 3, inv_mat_2)
 print(encrypt)
-hc.decrypt("ARUNGAGAMANIB", 3, invertible_mat)
+hc.decrypt("ZYYLRMGOGBMWICV", 3, inv_mat_2)
 
 """ import vigenere as vigenere_cipher
 vig = vigenere_cipher.Vigenere()
