@@ -37,3 +37,10 @@ print(rev)
 encrypt = hc.encrypt("ARUNGAGAMANIBUD", 3, invertible_mat)
 print(encrypt)
 hc.decrypt("ARUNGAGAMANIB", 3, invertible_mat)
+
+""" import vigenere as vigenere_cipher
+vig = vigenere_cipher.Vigenere()
+vig.key = "SONY"
+text = "thisplaintext"
+e_text = vig.encrypt(text)
+d_text = vig.decrypt(e_text) """
