@@ -12,7 +12,7 @@ print(PlayfairEngine.get_pos(PlayfairEngine.text_mat[1]))
 
  """
 
-import affine as affine_cipher
+""" import affine as affine_cipher
 af = affine_cipher.Affine()
 af.input_keys()
 if (af.check_coprime(af.key_a)):
@@ -21,4 +21,19 @@ if (af.check_coprime(af.key_a)):
     e_text = af.encrypt(text, af.key_a, af.key_b)
     d_text = af.decrypt(e_text, af.key_a, af.key_b)
 else:
-    print('\'a\' must be coprime with 26')
+    print('\'a\' must be coprime with 26') """
+
+import hill as hill_cipher
+invertible_mat = [[6,24,1],[13,16,10],[20,17,14]]
+non_invertible_mat = [[9,6], [12,8]]
+
+hc = hill_cipher.Hill()
+text_mat = hc.split_text("ARUNGAGAMANIB", 3)
+ord_mat = hc.mat_char2ord(text_mat)
+rev = hc.mat_ord2char(ord_mat)
+print(text_mat)
+print(ord_mat)
+print(rev)
+encrypt = hc.encrypt("ARUNGAGAMANIBUD", 3, invertible_mat)
+print(encrypt)
+hc.decrypt("ARUNGAGAMANIB", 3, invertible_mat)
