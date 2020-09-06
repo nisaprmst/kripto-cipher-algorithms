@@ -26,6 +26,12 @@ import vigenere as vigenere_cipher
 
 vig = vigenere_cipher.Vigenere()
 vig.key = "SONY"
+vig.set_full(True)
+vig.set_auto(True)
+vig.set_extended(True)
+vig.set_extended(False)
+vig.set_full(False)
+vig.set_auto(False)
 text = "thisplaintext"
 e_text = vig.encrypt(text)
 d_text = vig.decrypt(e_text)

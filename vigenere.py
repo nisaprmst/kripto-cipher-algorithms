@@ -18,24 +18,31 @@ class Vigenere():
     
     def set_extended(self, _extended):
         self.extended = _extended
+        if (_extended):
+            self.alphabet = [c for c in (chr(i) for i in range(0,256))]
+        else:
+            self.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        self.make_matrix()
     
     def input_key(self):
         self.key = str(input("Insert key: "))
-        self.key = self.key.upper()
 
     def shuffle_matrix(self):
         self.make_matrix()
     
     def make_matrix(self):
         np_alphabet = np.array(list(self.alphabet))
-        self.matrix = np.empty(shape=(0,26))
-
-        for i in range(26):
+        if self.extended:
+            cnt = 256
+        else:
+            cnt = 26
+        self.matrix = np.empty(shape=(0,cnt))
+        for i in range(cnt):
             mod_alphabet = np.roll(np_alphabet, -1*i)            
             self.matrix = np.append(self.matrix, [mod_alphabet], axis=0)
 
         if self.full:
-            for i in range(26):
+            for i in range(cnt):
                 self.matrix[i][1:] = np.random.permutation(self.matrix[i][1:])
     
     def expand_key(self, text: str):
@@ -53,7 +60,9 @@ class Vigenere():
 
     def encrypt(self, text: str):
         print("Encrypting...")
-        text = text.upper()
+        if not self.extended:
+            text = text.upper()
+            self.key = self.key.upper()
         expanded_key = self.expand_key(text)
         # encrypt
         key_pos = 0
@@ -63,9 +72,9 @@ class Vigenere():
                 search_text = np.where(self.matrix[0] == letter)
                 search_key = np.where(self.matrix[:, 0] == expanded_key[key_pos])
                 key_pos += 1
-                idx_plain = search_text[0][0]
+                idx_text = search_text[0][0]
                 idx_key = search_key[0][0]
-                ciphertext += self.matrix[idx_key][idx_plain]
+                ciphertext += self.matrix[idx_key][idx_text]
         print("Final text is: {}".format(ciphertext))
         return ciphertext
     
@@ -80,7 +89,9 @@ class Vigenere():
         return plaintext
 
     def decrypt_auto_key(self, text: str):
-        text = text.upper()
+        if not self.extended:
+            text = text.upper()
+            self.key = self.key.upper()
         # decrypt
         plaintext = ""
         key_len = len(self.key)
@@ -102,7 +113,9 @@ class Vigenere():
         return plaintext
     
     def decrypt_default_key(self, text: str):
-        text = text.upper()
+        if not self.extended:
+            text = text.upper()
+            self.key = self.key.upper()
     
         # expand key to encrypt plain text
         expanded_key = self.expand_key(text)
