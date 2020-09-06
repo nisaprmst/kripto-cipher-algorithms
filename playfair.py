@@ -32,19 +32,33 @@ class Playfair():
         print("==========================")
     
     def set_cipher_text(self, text):
+        alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
         text_mat = []
         for e in text.upper():
-            if e == ' ':
-                pass
-            elif e == 'J':
+            if e == 'J':
                 text_mat.append('I')
+            elif e not in alphabet:
+                pass
             else:
                 text_mat.append(e)
-        if len(text_mat)%2==1:
-            text_mat.append('X')
-        self.text_mat = text_mat
-        print(text_mat)
-    
+        cnt = 0
+        text_bigram = []
+        while cnt < len(text_mat):
+            if cnt+1 == len(text_mat):
+                text_bigram.append([text_mat[cnt], 'X'])
+                cnt += 1
+                continue
+            if text_mat[cnt] != text_mat[cnt+1]:
+                text_bigram.append([text_mat[cnt], text_mat[cnt+1]])
+                cnt += 2
+            else:
+                if text[cnt] == 'X':
+                    text_bigram.append([text_mat[cnt], 'Z'])
+                else:
+                    text_bigram.append([text_mat[cnt], 'X'])
+                cnt += 1
+        self.text_bigram = text_bigram
+        print(text_bigram)    
     def create_matrix(self):
         if self.has_keyword:
             mg = [[],[],[],[],[]]
@@ -71,18 +85,47 @@ class Playfair():
                     break
         return (x,y)
 
-    def encrypt(self):
-        for i in range(len(self.text_mat)/2):
-            letter_1 = self.mg[i*2]
-            letter_2 = self.mg[i*2 + 1]
+    def encrypt(self, text: str):
+        self.set_cipher_text(text)
+        ciphertext = ""
+        for i in range(len(self.text_bigram)):
+            letter_1 = self.text_bigram[i][0]
+            letter_2 = self.text_bigram[i][1]
             pos_1 = self.get_pos(letter_1)
             pos_2 = self.get_pos(letter_2)
             if pos_1[0] == pos_2[0]:
                 # same row
-                pass
+                ciphertext += self.mg[pos_1[0]][(pos_1[1]+1)%5]
+                ciphertext += self.mg[pos_2[0]][(pos_2[1]+1)%5]
             elif pos_1[1] == pos_2[1]:
                 # same column
-                pass
+                ciphertext += self.mg[(pos_1[0]+1)%5][pos_1[1]]
+                ciphertext += self.mg[(pos_2[0]+1)%5][pos_2[1]]
             else:
-                pass
+                ciphertext += self.mg[pos_1[0]][pos_2[1]]
+                ciphertext += self.mg[pos_2[0]][pos_1[1]]
+        print(ciphertext)
+        return ciphertext
+
+    def decrypt(self, text: str):
+        self.set_cipher_text(text)
+        plaintext = ""
+        for i in range(len(self.text_bigram)):
+            letter_1 = self.text_bigram[i][0]
+            letter_2 = self.text_bigram[i][1]
+            pos_1 = self.get_pos(letter_1)
+            pos_2 = self.get_pos(letter_2)
+            if pos_1[0] == pos_2[0]:
+                # same row
+                plaintext += self.mg[pos_1[0]][(pos_1[1]-1)%5]
+                plaintext += self.mg[pos_2[0]][(pos_2[1]-1)%5]
+            elif pos_1[1] == pos_2[1]:
+                # same column
+                plaintext += self.mg[(pos_1[0]-1)%5][pos_1[1]]
+                plaintext += self.mg[(pos_2[0]-1)%5][pos_2[1]]
+            else:
+                plaintext += self.mg[pos_1[0]][pos_2[1]]
+                plaintext += self.mg[pos_2[0]][pos_1[1]]
+        print(plaintext)
+        return plaintext
 
