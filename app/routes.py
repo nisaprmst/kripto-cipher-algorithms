@@ -69,7 +69,10 @@ def process():
         sc = supercipher.Superencrypt()
         vg = vigenere_cipher.Vigenere()
         vg.input_key(key[0])
-        result = sc.transpose(vg.encrypt(text))
+        if is_encrypt:
+            result = sc.transpose(vg.encrypt(text))
+        else:
+            result = vg.decrypt(sc.transpose(text))
         print(result)
     else:
         status = 400
