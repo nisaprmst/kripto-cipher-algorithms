@@ -3,6 +3,7 @@ from .algorithms import vigenere as vigenere_cipher
 from .algorithms import affine as affine_cipher
 from .algorithms import hill as hill_cipher
 from .algorithms import playfair as playfair_cipher
+from .algorithms import supercipher as supercipher
 from flask_cors import cross_origin
 
 from . import app
@@ -63,6 +64,12 @@ def process():
         else:
             res = hc.decrypt(text, len(mat), mat)
         result = hc.matrix2string(res)
+        print(result)
+    elif cipher == 'supercipher':
+        sc = supercipher.Superencrypt()
+        vg = vigenere_cipher.Vigenere()
+        vg.input_key(key[0])
+        result = sc.transpose(vg.encrypt(text))
         print(result)
     else:
         status = 400
