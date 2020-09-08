@@ -1,21 +1,23 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Header from './components/Header';
 import InputOutput from './components/InputOutput';
 import CipherSelector from './components/CipherSelector';
 import styled from 'styled-components';
-class App extends Component {
-    render() {
-        return (
-            <Wrapper>
-                <div className="container mt-4 my-4 main-container">
-                    <Header />
-                    <CipherSelector />
-                    <InputOutput />
-                </div>
-                
-            </Wrapper>
-        )
+const App = () => {
+    const [cipherData, setCipherData] = useState(null);
+    const [cipherText, setCipherText] = useState('');
+    const handleSubmit = () => {
+        console.log('Handle submit called');
     }
+    return (
+        <Wrapper>
+            <div className="container mt-4 my-4 main-container">
+                <Header />
+                <CipherSelector setCipherData={setCipherData} handleSubmit={handleSubmit}/>
+                {/* <InputOutput setCipherText={setCipherText}/> */}
+            </div>
+        </Wrapper>
+    )
 }
 
 const Wrapper = styled.div`

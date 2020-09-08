@@ -1,12 +1,36 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
-const CipherSelector = () => {
+const CipherSelector = ({setCipherData, handleSubmit}) => {
     const [cipher, setCipher] = useState('vigenere');
+    const [textData, setTextData] = useState('');
 
     const handleCipherSelected = (selectEl) => {
         const val = selectEl.options[selectEl.selectedIndex].value;
         setCipher(val);
     };
+
+    const handleCipherSubmit = () => {
+        const objToSubmit = {
+            type: cipher,
+            keys: []
+        }
+        if (cipher === 'vigenere') {
+            objToSubmit.variant = document.querySelector('input[name="v_type"]:checked').value;
+            objToSubmit.keys.push(document.getElementById('v_key').value);
+        } else if (cipher === 'playfair') {
+            objToSubmit.keys.push(document.getElementById('p_key').value);
+        } else if (cipher === 'affine') {
+            objToSubmit.keys.push(document.getElementById('a_key_a').value);
+            objToSubmit.keys.push(document.getElementById('a_key_b').value);
+        } else if (cipher === 'hill') {
+            objToSubmit.keys.push(document.getElementById('h_key').value);
+        } else if (cipher === 'supercipher') {
+
+        } else { return; }
+        objToSubmit.text = textData;
+        setCipherData(objToSubmit);
+        console.log(objToSubmit);
+    }
     return (
         <Wrapper>
             <p>Cipher Method</p>
@@ -22,13 +46,13 @@ const CipherSelector = () => {
                         <div className="vigenere">
                             <div className="cipher-input-data">
                                 <p>Type</p>
-                                <input type="radio" name="v_type" id="v_standard"/>
+                                <input type="radio" name="v_type" id="v_standard" value="v_standard" defaultChecked/>
                                 <label htmlFor="v_standard">Standard</label>
-                                <input type="radio" name="v_type" id="v_full"/>
+                                <input type="radio" name="v_type" id="v_full" value="v_full"/>
                                 <label htmlFor="v_full">Full</label>
-                                <input type="radio" name="v_type" id="v_auto"/>
+                                <input type="radio" name="v_type" id="v_auto" value="v_auto"/>
                                 <label htmlFor="v_auto">Auto</label>
-                                <input type="radio" name="v_type" id="v_extended"/>
+                                <input type="radio" name="v_type" id="v_extended" value="v_extended"/>
                                 <label htmlFor="v_extended">Extended</label>
                                 <p>Key</p>
                                 <input type="text" name="vigenere_key" id="v_key"/>
@@ -44,8 +68,8 @@ const CipherSelector = () => {
                     ) : cipher === 'affine' ? (
                         <div className="affine">
                             <div className="cipher-input-data">
-                                <p>Key a: <input type="text" name="affine_key" id="p_key_a"/></p> 
-                                <p>Key b: <input type="text" name="affine_key" id="p_key_b"/></p>                                
+                                <p>Key a: <input type="text" name="affine_key" id="a_key_a"/></p> 
+                                <p>Key b: <input type="text" name="affine_key" id="a_key_b"/></p>                                
                             </div>
                         </div>
                     ) : cipher === 'hill' ? (
@@ -58,12 +82,28 @@ const CipherSelector = () => {
                     ) : null
                 }
             </div>            
-            <span className="gas-button">GAS</span>
+            <span className="gas-button" onClick={() => handleCipherSubmit()}>GAS</span>
+            <div className="io-field">
+                <p>Input Text</p>
+                <textarea name="input-text" id="input-text" rows="10" onChange={(e) => setTextData(e.target.value)}></textarea>
+            </div>
+            <div className="io-field">
+                <p>Output Text</p>
+                <textarea name="input-text" id="input-text" rows="10"></textarea>
+            </div>
         </Wrapper>
     )
 }
 const Wrapper = styled.div`
     padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    .io-field {
+        margin-top: 1rem;
+        textarea {
+            width:100%;
+        }
+    }
     p {
         margin-block-end: 0;
         margin-block-start: 0;

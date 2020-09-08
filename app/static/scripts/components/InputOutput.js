@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-const InputOutput = () => {
+const InputOutput = ({setCipherText}) => {
     return (
         <Wrapper>
             <div className="io-field">
