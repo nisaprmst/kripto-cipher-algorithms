@@ -24,14 +24,14 @@ def search_keywords():
     if cipher == 'vigenere':
         vig = vigenere_cipher.Vigenere()
         vig.input_key(key[0])
-        vig.set_auto(request.json['auto'])
-        vig.set_extended(request.json['extended'])
-        vig.set_full(request.json['full'])
+        vig.set_auto(True if request.json['variant'] == 'v_auto' else False)
+        vig.set_extended(True if request.json['variant'] == 'v_extended' else False)
+        vig.set_full(True if request.json['variant'] == 'v_full' else False)
         result = vig.encrypt(text)
     elif cipher == 'affine':
         af = affine_cipher.Affine()
-        key_a = key[0]
-        key_b = key[1]
+        key_a = int(key[0])
+        key_b = int(key[1])
         af.input_keys(key_a, key_b)
         if (af.check_coprime(af.key_a)):
             print('Keys are legal')
@@ -45,9 +45,12 @@ def search_keywords():
         pf.create_matrix()
         result = pf.encrypt(text)
     elif cipher == 'hill':
-        inv_mat_2 = [[17,17,5], [21,18,21], [2,2,19]]
+        mat = []
+        for row in request.json['key']:
+            mat.append(row)
+        print(mat)
         hc = hill_cipher.Hill()
-        encrypt = hc.encrypt(text, 3, inv_mat_2)
+        encrypt = hc.encrypt(text, len(mat), mat)
         result = hc.matrix2string(encrypt)
         print(result)
     else:

@@ -12,24 +12,63 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
     const handleCipherSubmit = () => {
         const objToSubmit = {
             type: cipher,
-            keys: []
+            key: []
         }
         if (cipher === 'vigenere') {
             objToSubmit.variant = document.querySelector('input[name="v_type"]:checked').value;
-            objToSubmit.keys.push(document.getElementById('v_key').value);
+            objToSubmit.key.push(document.getElementById('v_key').value);
         } else if (cipher === 'playfair') {
-            objToSubmit.keys.push(document.getElementById('p_key').value);
+            objToSubmit.key.push(document.getElementById('p_key').value);
         } else if (cipher === 'affine') {
-            objToSubmit.keys.push(document.getElementById('a_key_a').value);
-            objToSubmit.keys.push(document.getElementById('a_key_b').value);
+            objToSubmit.key.push(document.getElementById('a_key_a').value);
+            objToSubmit.key.push(document.getElementById('a_key_b').value);
         } else if (cipher === 'hill') {
-            objToSubmit.keys.push(document.getElementById('h_key').value);
+            const splits = document.getElementById('h_key').value.split('↵').join(' ').split(/\s+/m);
+            if (!Number.isInteger(Math.sqrt(splits.length))) { 
+                alert('Enter square amount of numbers');
+                console.log(splits.length);
+                console.log(Math.sqrt(splits.length));
+                console.log(splits);
+                return;
+            }
+            const matrixLength = Math.sqrt(splits.length);
+            let numberMatrix = [];
+            for (const item of splits) {
+                if (!isNaN(item)) {
+                    if (numberMatrix.length < matrixLength) {
+                        numberMatrix.push(parseInt(item));
+                    } else {
+                        objToSubmit.key.push(numberMatrix);
+                        numberMatrix = [];
+                        numberMatrix.push(parseInt(item));
+                    }
+                } else {
+                    alert('Make sure every element is integer');
+                    return;
+                }
+            }
+            objToSubmit.key.push(numberMatrix);
         } else if (cipher === 'supercipher') {
 
         } else { return; }
         objToSubmit.text = textData;
         setCipherData(objToSubmit);
         console.log(objToSubmit);
+        fetch('http://127.0.0.1:5000/api/input', {
+            method: 'POST',
+            mode:'cors',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(objToSubmit)
+        }).then((res) => res.json()).then((data) => {
+            console.log(data.status);
+            console.log(data.result);
+            if (data.status === 200) {
+                document.getElementById('output-text').innerText = data.result;
+            }
+        })
     }
     return (
         <Wrapper>
@@ -85,11 +124,11 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
             <span className="gas-button" onClick={() => handleCipherSubmit()}>GAS</span>
             <div className="io-field">
                 <p>Input Text</p>
-                <textarea name="input-text" id="input-text" rows="10" onChange={(e) => setTextData(e.target.value)}></textarea>
+                <textarea name="input-text" id="input-text" rows="3" onChange={(e) => setTextData(e.target.value)}></textarea>
             </div>
             <div className="io-field">
                 <p>Output Text</p>
-                <textarea name="input-text" id="input-text" rows="10"></textarea>
+                <textarea name="input-text" id="output-text" rows="10"></textarea>
             </div>
         </Wrapper>
     )
