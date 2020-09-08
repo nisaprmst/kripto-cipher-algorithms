@@ -7,8 +7,6 @@ from flask_cors import cross_origin
 
 from . import app
 
-
-
 data = {}
 
 @app.route('/api/input', methods=['POST'])
