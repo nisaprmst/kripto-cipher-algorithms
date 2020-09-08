@@ -9,14 +9,15 @@ from . import app
 
 data = {}
 
-@app.route('/api/input', methods=['POST'])
+@app.route('/api/process', methods=['POST'])
 @cross_origin()
-def search_keywords():
+def process():
     if (not request.json or not ('type' in request.json and 'key' in request.json and 'text' in request.json)):
         abort(400)
     cipher = request.json['type']
     result = ''
     status = 200
+    is_encrypt = request.json['command']
     key = request.json['key']
     text = request.json['text']
     if cipher == 'vigenere':
@@ -25,7 +26,10 @@ def search_keywords():
         vig.set_auto(True if request.json['variant'] == 'v_auto' else False)
         vig.set_extended(True if request.json['variant'] == 'v_extended' else False)
         vig.set_full(True if request.json['variant'] == 'v_full' else False)
-        result = vig.encrypt(text)
+        if is_encrypt:
+            result = vig.encrypt(text)
+        else:
+            result = vig.decrypt(text)
     elif cipher == 'affine':
         af = affine_cipher.Affine()
         key_a = int(key[0])
@@ -33,7 +37,10 @@ def search_keywords():
         af.input_keys(key_a, key_b)
         if (af.check_coprime(af.key_a)):
             print('Keys are legal')
-            result = af.encrypt(text, af.key_a, af.key_b)
+            if is_encrypt:
+                result = af.encrypt(text, af.key_a, af.key_b)
+            else:
+                result = af.decrypt(text, af.key_a, af.key_b)
         else:
             status = 400
             result = "Keys must be coprime with 26. Choose another value!"
@@ -41,15 +48,21 @@ def search_keywords():
         pf = playfair_cipher.Playfair()
         pf.set_key(key[0])
         pf.create_matrix()
-        result = pf.encrypt(text)
+        if is_encrypt:
+            result = pf.encrypt(text)
+        else:
+            result = pf.decrypt(text)
     elif cipher == 'hill':
         mat = []
         for row in request.json['key']:
             mat.append(row)
         print(mat)
         hc = hill_cipher.Hill()
-        encrypt = hc.encrypt(text, len(mat), mat)
-        result = hc.matrix2string(encrypt)
+        if is_encrypt:
+            res = hc.encrypt(text, len(mat), mat)
+        else:
+            res = hc.decrypt(text, len(mat), mat)
+        result = hc.matrix2string(res)
         print(result)
     else:
         status = 400

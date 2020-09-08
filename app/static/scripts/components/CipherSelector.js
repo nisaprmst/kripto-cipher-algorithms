@@ -54,7 +54,7 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
         objToSubmit.text = textData;
         setCipherData(objToSubmit);
         console.log(objToSubmit);
-        fetch('http://127.0.0.1:5000/api/input', {
+        fetch('http://127.0.0.1:5000/api/process', {
             method: 'POST',
             mode:'cors',
             credentials: 'same-origin',
