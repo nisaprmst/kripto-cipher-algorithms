@@ -1,5 +1,6 @@
 import numpy as np
 ord_A = ord('A')
+legal_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 class Hill():
     def modInverse(self, a, m) : 
         a = a % m; 
@@ -41,26 +42,27 @@ class Hill():
         mat = []
         im_mat = []
         for i in range(len(text)):
-            if i != len(text) - 1:
-                if len(im_mat) == n:
-                    mat.append(im_mat)
-                    im_mat = []
-                im_mat.append(text[i].upper())
-            else:
-                if len(im_mat) < n:
+            if text[i] in legal_alphabet:
+                if i != len(text) - 1:
+                    if len(im_mat) == n:
+                        mat.append(im_mat)
+                        im_mat = []
                     im_mat.append(text[i].upper())
-                    n_iter = n - len(im_mat)
-                    for i in range(n_iter):
-                        im_mat.append('X')
-                    mat.append(im_mat)
                 else:
-                    mat.append(im_mat)
-                    im_mat = []
-                    im_mat.append(text[i].upper())
-                    n_iter = n - len(im_mat)
-                    for i in range(n_iter):
-                        im_mat.append('X')
-                    mat.append(im_mat)
+                    if len(im_mat) < n:
+                        im_mat.append(text[i].upper())
+                        n_iter = n - len(im_mat)
+                        for i in range(n_iter):
+                            im_mat.append('X')
+                        mat.append(im_mat)
+                    else:
+                        mat.append(im_mat)
+                        im_mat = []
+                        im_mat.append(text[i].upper())
+                        n_iter = n - len(im_mat)
+                        for i in range(n_iter):
+                            im_mat.append('X')
+                        mat.append(im_mat)
         self.text_mat = mat
         return mat
 

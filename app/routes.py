@@ -3,6 +3,7 @@ from .algorithms import vigenere as vigenere_cipher
 from .algorithms import affine as affine_cipher
 from .algorithms import hill as hill_cipher
 from .algorithms import playfair as playfair_cipher
+from .algorithms import supercipher as supercipher
 from flask_cors import cross_origin
 
 from . import app
@@ -50,6 +51,12 @@ def search_keywords():
         hc = hill_cipher.Hill()
         encrypt = hc.encrypt(text, len(mat), mat)
         result = hc.matrix2string(encrypt)
+        print(result)
+    elif cipher == 'supercipher':
+        sc = supercipher.Superencrypt()
+        vg = vigenere_cipher.Vigenere()
+        vg.input_key(key[0])
+        result = sc.transpose(vg.encrypt(text))
         print(result)
     else:
         status = 400
