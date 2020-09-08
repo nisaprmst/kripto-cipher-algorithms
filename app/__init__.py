@@ -1,10 +1,7 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask
+from flask_cors import CORS, cross_origin
+
 
 app = Flask(__name__, template_folder="static")
-print("hewwo")
-
-@app.route('/')
-@app.route('/app')
-def index():
-	return render_template("index.html")
-
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'

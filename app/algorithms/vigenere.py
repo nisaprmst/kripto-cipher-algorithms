@@ -24,8 +24,8 @@ class Vigenere():
             self.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         self.make_matrix()
     
-    def input_key(self):
-        self.key = str(input("Insert key: "))
+    def input_key(self, key):
+        self.key = key
 
     def shuffle_matrix(self):
         self.make_matrix()
