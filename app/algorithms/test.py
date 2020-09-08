@@ -1,13 +1,13 @@
-import playfair as pf
+# import playfair as pf
 
-PlayfairEngine = pf.Playfair()
-key = "alngeshpub"
-PlayfairEngine.set_key(key)
-PlayfairEngine.create_matrix()
-text = "temui ibu nanti malam"
-PlayfairEngine.print_key()
-e_text = PlayfairEngine.encrypt(text)
-d_text = PlayfairEngine.decrypt(e_text)
+# PlayfairEngine = pf.Playfair()
+# key = "alngeshpub"
+# PlayfairEngine.set_key(key)
+# PlayfairEngine.create_matrix()
+# text = "temui ibu nanti malam"
+# PlayfairEngine.print_key()
+# e_text = PlayfairEngine.encrypt(text)
+# d_text = PlayfairEngine.decrypt(e_text)
 
  
 
@@ -22,7 +22,7 @@ if (af.check_coprime(af.key_a)):
 else:
     print('\'a\' must be coprime with 26') """
 
-""" import hill as hill_cipher
+import hill as hill_cipher
 invertible_mat = [[6,24,1],[13,16,10],[20,17,14]]
 inv_mat_2 = [[17,17,5], [21,18,21], [2,2,19]]
 non_invertible_mat = [[9,6], [12,8]]
@@ -34,7 +34,8 @@ encrypt = hc.encrypt(input_text, 3, inv_mat_2)
 encrypted_text = hc.matrix2string(encrypt)
 print(encrypted_text)
 decrypted_text = hc.decrypt(encrypted_text, 3, inv_mat_2)
-print(hc.matrix2string(decrypted_text)) """
+print(hc.matrix2string(decrypted_text))
+print(decrypted_text)
 
 """ import vigenere as vigenere_cipher
 vig = vigenere_cipher.Vigenere()

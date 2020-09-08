@@ -4,9 +4,9 @@ ord_A = ord('A')
 legal_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 class Affine():
-    def input_keys(self):
-        self.key_a = int(input('Insert key a: '))
-        self.key_b = int(input('Insert key b: '))
+    def input_keys(self, a, b):
+        self.key_a = a
+        self.key_b = b
 
     def set_keys(self, a, b):
         self.key_a = a
