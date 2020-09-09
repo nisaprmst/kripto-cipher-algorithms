@@ -1,6 +1,6 @@
 import math
 class Superencrypt():
-    ''' This transpose function just swap the  '''
+    ''' This transpose function just swap the first and last letter and slowly approacing center  '''
     def transpose(self, text: str):
         string_arr = [];
         string_len = len(text)
