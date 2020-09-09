@@ -4,6 +4,7 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
     const [cipher, setCipher] = useState('vigenere');
     const [textData, setTextData] = useState('');
     const [blobData, setBlobData] = useState(null);
+    const [arrBuf, setArrBuf] = useState(null);
     const [isEncryptFile, setIsEncryptFile] = useState(null);
 
     const handleCipherSelected = (selectEl) => {
@@ -14,10 +15,21 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
     const handleFileLoader = (fileNode) => {
         const reader = new FileReader();
         reader.onload = () => {
-            document.getElementById('input-text').value = reader.result;
-            setTextData(reader.result);
+            document.getElementById('input-text').value = reader.result.byteLength;
+            const uint8arr = new Uint8Array(reader.result);
+            const standardArr = Array.from(uint8arr);
+            if (document.querySelector('input[name="v_type"]:checked').value === 'v_extended') {
+                console.log(standardArr);
+                setTextData(standardArr);
+                setArrBuf(standardArr);
+            } else {
+                const enc = new TextEncoder("utf-8");
+                document.getElementById('input-text').value = enc.decode(uint8arr);
+                setTextData(enc.decode(uint8arr));
+            }
+            
         }
-        reader.readAsText(fileNode.files[0]);
+        reader.readAsArrayBuffer(fileNode.files[0]);
     }
     const handleCipherSubmit = (is_encrypt) => {
         const objToSubmit = {
@@ -62,8 +74,12 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
         } else if (cipher === 'supercipher') {
             objToSubmit.key.push(document.getElementById('v_key').value);
         } else { return; }
-        if (cipher !== 'vigenere' && objToSubmit.variant !== undefined) {
-            objToSubmit.text = textData.split(/\s+/m).join('');
+        if (cipher === 'vigenere' && objToSubmit.variant !== undefined) {
+            if (objToSubmit.variant !== 'v_extended') {
+                objToSubmit.text = textData.split(/\s+/m).join('');
+            } else {
+                objToSubmit.text = arrBuf;
+            }
         } else {
             objToSubmit.text = textData;
         }
@@ -81,13 +97,21 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
             console.log(data.status);
             console.log(data.result);
             if (data.status === 200) {
-                document.getElementById('output-text').innerText = data.result;
-                setBlobData(data.result);
+                if (data.result instanceof Array) {
+                    console.log('Returned data size: ', data.result.length);
+                    const enc = new TextEncoder("utf-8");
+                    document.getElementById('input-text').value = enc.decode(data.result);
+                    setBlobData(new Blob([data.result]));
+                } else {
+                    document.getElementById('output-text').innerText = data.result;
+                    setBlobData(data.result);
+                }
                 if (is_encrypt) {
                     setIsEncryptFile(true);
                 } else {
                     setIsEncryptFile(false);
                 }
+                
             }
         })
     }
