@@ -55,14 +55,19 @@ def process():
             result = pf.decrypt(text)
     elif cipher == 'hill':
         mat = []
+        invertible_mat = [[6,24,1],[13,16,10],[20,17,14]]
         for row in request.json['key']:
             mat.append(row)
         print(mat)
         hc = hill_cipher.Hill()
+        res = None
         if is_encrypt:
             res = hc.encrypt(text, len(mat), mat)
+            # res = hc.encrypt(text, 3, invertible_mat)
         else:
             res = hc.decrypt(text, len(mat), mat)
+            # res = hc.decrypt(text, 3, invertible_mat)
+        print(res)
         result = hc.matrix2string(res)
         print(result)
     elif cipher == 'supercipher':

@@ -17,9 +17,10 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
         }
         reader.readAsText(fileNode.files[0]);
     }
-    const handleCipherSubmit = () => {
+    const handleCipherSubmit = (is_encrypt) => {
         const objToSubmit = {
             type: cipher,
+            command: is_encrypt,
             key: []
         }
         if (cipher === 'vigenere') {
@@ -141,7 +142,10 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
                     ) : null
                 }
             </div>            
-            <span className="gas-button" onClick={() => handleCipherSubmit()}>GAS</span>
+            <div className="buttons">
+                <span className="gas-button" onClick={() => handleCipherSubmit(true)}>Encrypt</span>
+                <span className="gas-button" onClick={() => handleCipherSubmit(false)}>Decrypt</span>
+            </div>
             <div className="io-field">
                 <p>Input Text</p>
                 <input type="file" name="file-loader" id="file-loader" onChange={(e) => handleFileLoader(e.target)} />
@@ -164,6 +168,9 @@ const Wrapper = styled.div`
             width:100%;
         }
     }
+    .buttons {
+        display: flex;
+    }
     p {
         margin-block-end: 0;
         margin-block-start: 0;
@@ -184,6 +191,10 @@ const Wrapper = styled.div`
         color: white;
         border: 1px solid #0f6b44;
         border-radius: 5px;
+        &--red {
+            background-color: #c25d55;
+            border: 1px solid #87362f;
+        }
     }
     .gas-button:hover {
         cursor: pointer;
