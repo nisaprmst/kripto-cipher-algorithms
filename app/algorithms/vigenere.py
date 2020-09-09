@@ -14,6 +14,8 @@ class Vigenere():
     
     def set_full(self, _full):
         self.full = _full
+        self.extended = ~(_full)
+        self.auto = ~(_full)
         if self.full:
             self.matrix = self.full_matrix
         else:
@@ -21,9 +23,13 @@ class Vigenere():
 
     def set_auto(self, _auto):
         self.auto = _auto
+        self.extended = ~(_auto)
+        self.full = ~(_auto)
     
     def set_extended(self, _extended):
         self.extended = _extended
+        self.auto = ~(_extended)
+        self.full = ~(_extended)
         if (_extended):
             self.alphabet = [c for c in (chr(i) for i in range(0,256))]
         else:
@@ -47,7 +53,7 @@ class Vigenere():
             mod_alphabet = np.roll(np_alphabet, -1*i)            
             self.matrix = np.append(self.matrix, [mod_alphabet], axis=0)
 
-    def expand_key(self, text: str):
+    def expand_key(self, text: str = ""):
         # expand key to encrypt plain text
         text_len = len(text)
         expanded_key = self.key
@@ -60,20 +66,17 @@ class Vigenere():
             expanded_key_len = len(expanded_key)
         return expanded_key
 
-    def encrypt(self, text: str):
+    def encrypt_extended(self, arr_text):
         print("Encrypting...")
-        if not self.extended:
-            text = text.upper()
-            self.key = self.key.upper()
-        expanded_key = self.expand_key(text)
+        expanded_key = self.expand_key(arr_text)
         # encrypt
         key_pos = 0
         null_count = 0
         ciphertext = []
         print(self.matrix)
-        for letter in text:
-            if letter in self.alphabet:
-                search_text = np.where(self.matrix[0] == letter)
+        for letter in arr_text:
+            if chr(letter) in self.alphabet:
+                search_text = np.where(self.matrix[0] == chr(letter))
                 search_key = np.where(self.matrix[:, 0] == expanded_key[key_pos])
                 key_pos += 1
                 idx_text = search_text[0][0]
@@ -89,6 +92,38 @@ class Vigenere():
         print("Null count: ", null_count, "null char:", "\x00", "there")
         return ciphertext
     
+    def encrypt(self, text: str):
+        print("Encrypting...")
+        expanded_key = self.expand_key(text)
+        # encrypt
+        key_pos = 0
+        ciphertext = ""
+        for letter in text:
+            if letter in self.alphabet:
+                search_text = np.where(self.matrix[0] == letter)
+                search_key = np.where(self.matrix[:, 0] == expanded_key[key_pos])
+                key_pos += 1
+                idx_text = search_text[0][0]
+                idx_key = search_key[0][0]
+                ciphertext += self.matrix[idx_key][idx_text]
+        print("Final text is: {}".format(ciphertext))
+        return ciphertext
+    
+    def decrypt_extended(self, arr_text):
+        # expand key to encrypt plain text
+        expanded_key = self.expand_key()
+        # decrypt
+        key_pos = 0
+        plaintext = []
+        for letter in arr_text:
+            search_key = np.where(self.matrix[:, 0] == expanded_key[key_pos])
+            idx_key = search_key[0][0]
+            search_cipher = np.where(self.matrix[idx_key] == chr(letter))
+            idx_cipher = search_cipher[0][0]
+            plaintext.append(ord(self.matrix[0][idx_cipher]))
+            key_pos += 1
+        return plaintext
+
     def decrypt(self, text: str):
         print("Decrypting...")
         plaintext = ""

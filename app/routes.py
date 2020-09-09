@@ -29,18 +29,26 @@ def process():
         vig.set_auto(True if request.json['variant'] == 'v_auto' else False)
         vig.set_extended(True if request.json['variant'] == 'v_extended' else False)
         vig.set_full(True if request.json['variant'] == 'v_full' else False)
-        if request.json['variant'] == 'v_extended':
-            text = ''.join([chr(i) for i in text])
+        #if request.json['variant'] == 'v_extended':
+            #text = ''.join([chr(i) for i in text])
         if is_encrypt:
-            result = vig.encrypt(text)
             if request.json['variant'] != 'v_extended':
+                print("yeyyyyy")
+                result = vig.encrypt_extended(text)
                 result = ''.join([chr(x) for x in result])
                 print(len(result))
+            else:
+                print("lho")
+                result = vig.encrypt(text)
+
         else:
-            result = vig.decrypt(text)
             if request.json['variant'] != 'v_extended':
+                result = vig.decrypt_extended(text)
                 result = ''.join([chr(x) for x in result])
                 print(len(result))
+            else:
+                result = vig.decrypt(text)
+
     elif cipher == 'affine':
         af = affine_cipher.Affine()
         key_a = int(key[0])
