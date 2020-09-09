@@ -100,7 +100,7 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
                 if (data.result instanceof Array) {
                     console.log('Returned data size: ', data.result.length);
                     const enc = new TextEncoder("utf-8");
-                    document.getElementById('input-text').value = enc.decode(data.result);
+                    // document.getElementById('input-text').value = enc.decode(data.result);
                     setBlobData(new Blob([data.result]));
                 } else {
                     document.getElementById('output-text').innerText = data.result;
