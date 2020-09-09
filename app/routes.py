@@ -10,6 +10,8 @@ from . import app
 
 data = {}
 
+vig = vigenere_cipher.Vigenere()
+
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
 def process():
@@ -22,7 +24,6 @@ def process():
     key = request.json['key']
     text = request.json['text']
     if cipher == 'vigenere':
-        vig = vigenere_cipher.Vigenere()
         vig.input_key(key[0])
         vig.set_auto(True if request.json['variant'] == 'v_auto' else False)
         vig.set_extended(True if request.json['variant'] == 'v_extended' else False)

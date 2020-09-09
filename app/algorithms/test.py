@@ -9,14 +9,14 @@
 # e_text = PlayfairEngine.encrypt(text)
 # d_text = PlayfairEngine.decrypt(e_text)
 
-import supercipher
-import vigenere
-sc = supercipher.Superencrypt()
-vg = vigenere.Vigenere()
-vg.input_key("sony")
-e_text = sc.transpose(vg.encrypt("thisplaintext"))
-print(e_text)
-d_text = vg.decrypt(sc.transpose(e_text))
+# import supercipher
+# import vigenere
+# sc = supercipher.Superencrypt()
+# vg = vigenere.Vigenere()
+# vg.input_key("sony")
+# e_text = sc.transpose(vg.encrypt("thisplaintext"))
+# print(e_text)
+# d_text = vg.decrypt(sc.transpose(e_text))
 
 """ import affine as affine_cipher
 af = affine_cipher.Affine()
@@ -44,15 +44,14 @@ else:
 # print(hc.matrix2string(decrypted_text))
 # print(decrypted_text)
 
-# import vigenere as vigenere_cipher
-# vig = vigenere_cipher.Vigenere()
-# vig.key = "SONY"
-# vig.set_full(True)
-# vig.set_auto(True)
+import vigenere as vigenere_cipher
+vig = vigenere_cipher.Vigenere()
+vig.key = "SONY"
+vig.set_full(True)
+vig.set_auto(True)
 # vig.set_extended(True)
-# vig.set_extended(False)
-# vig.set_full(False)
-# vig.set_auto(False)
-# text = "thisplaintext"
-# e_text = vig.encrypt(text)
-# d_text = vig.decrypt(e_text)
+text = "thisplaintext"
+e_text = vig.encrypt(text)
+vig.set_full(False)
+vig.set_full(True)
+d_text = vig.decrypt(e_text)

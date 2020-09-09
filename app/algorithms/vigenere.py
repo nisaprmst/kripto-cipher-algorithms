@@ -8,10 +8,16 @@ class Vigenere():
         self.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         self.extended = False
         self.make_matrix()
+        self.full_matrix = self.matrix
+        for i in range(26):
+            self.full_matrix[i][1:] = np.random.permutation(self.matrix[i][1:])
     
     def set_full(self, _full):
         self.full = _full
-        self.make_matrix()
+        if self.full:
+            self.matrix = self.full_matrix
+        else:
+            self.make_matrix()
 
     def set_auto(self, _auto):
         self.auto = _auto
@@ -41,10 +47,6 @@ class Vigenere():
             mod_alphabet = np.roll(np_alphabet, -1*i)            
             self.matrix = np.append(self.matrix, [mod_alphabet], axis=0)
 
-        if self.full:
-            for i in range(cnt):
-                self.matrix[i][1:] = np.random.permutation(self.matrix[i][1:])
-    
     def expand_key(self, text: str):
         # expand key to encrypt plain text
         text_len = len(text)
