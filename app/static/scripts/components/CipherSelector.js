@@ -22,6 +22,11 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
                 console.log(standardArr);
                 setTextData(standardArr);
                 setArrBuf(standardArr);
+                for (const byte of standardArr) {
+                    if (byte > 255 || byte < 0) {
+                        alert('Out of bounds uint');
+                    }
+                }
             } else {
                 const enc = new TextEncoder("utf-8");
                 document.getElementById('input-text').value = enc.decode(uint8arr);

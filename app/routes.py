@@ -24,7 +24,7 @@ def process():
     key = request.json['key']
     text = request.json['text']
     if cipher == 'vigenere':
-        # print(text)
+        print(len(text))
         vig.input_key(key[0])
         vig.set_auto(True if request.json['variant'] == 'v_auto' else False)
         vig.set_extended(True if request.json['variant'] == 'v_extended' else False)
@@ -33,13 +33,13 @@ def process():
             text = ''.join([chr(i) for i in text])
         if is_encrypt:
             result = vig.encrypt(text)
-            if request.json['variant'] == 'v_extended':
-                result = [ord(x) for x in result]
+            if request.json['variant'] != 'v_extended':
+                result = ''.join([chr(x) for x in result])
                 print(len(result))
         else:
             result = vig.decrypt(text)
-            if request.json['variant'] == 'v_extended':
-                result = [ord(x) for x in result]
+            if request.json['variant'] != 'v_extended':
+                result = ''.join([chr(x) for x in result])
                 print(len(result))
     elif cipher == 'affine':
         af = affine_cipher.Affine()

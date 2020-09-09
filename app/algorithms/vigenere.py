@@ -68,7 +68,9 @@ class Vigenere():
         expanded_key = self.expand_key(text)
         # encrypt
         key_pos = 0
-        ciphertext = ""
+        null_count = 0
+        ciphertext = []
+        print(self.matrix)
         for letter in text:
             if letter in self.alphabet:
                 search_text = np.where(self.matrix[0] == letter)
@@ -76,8 +78,15 @@ class Vigenere():
                 key_pos += 1
                 idx_text = search_text[0][0]
                 idx_key = search_key[0][0]
-                ciphertext += self.matrix[idx_key][idx_text]
-        print("Final text is: {}".format(ciphertext))
+                if self.matrix[idx_key][idx_text] == '':
+                    null_count += 1
+                    ciphertext.append(0)
+                else:
+                    ciphertext.append(ord(self.matrix[idx_key][idx_text]))
+        # print("Final text is: {}".format(ciphertext))
+        print("Keypos: ", key_pos)
+        print("Encrypted length: ", len(ciphertext))
+        print("Null count: ", null_count, "null char:", "\x00", "there")
         return ciphertext
     
     def decrypt(self, text: str):
