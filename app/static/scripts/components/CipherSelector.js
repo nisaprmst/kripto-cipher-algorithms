@@ -3,6 +3,8 @@ import styled from 'styled-components';
 const CipherSelector = ({setCipherData, handleSubmit}) => {
     const [cipher, setCipher] = useState('vigenere');
     const [textData, setTextData] = useState('');
+    const [blobData, setBlobData] = useState(null);
+    const [isEncryptFile, setIsEncryptFile] = useState(null);
 
     const handleCipherSelected = (selectEl) => {
         const val = selectEl.options[selectEl.selectedIndex].value;
@@ -80,8 +82,26 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
             console.log(data.result);
             if (data.status === 200) {
                 document.getElementById('output-text').innerText = data.result;
+                setBlobData(data.result);
+                if (is_encrypt) {
+                    setIsEncryptFile(true);
+                } else {
+                    setIsEncryptFile(false);
+                }
             }
         })
+    }
+
+    const handleFileSave = () => {
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = 'display: none';
+        const blobDataHere = new Blob([blobData], { type: 'octet/stream'});
+        a.href = window.URL.createObjectURL(blobDataHere);
+        a.download = `${isEncryptFile ? 'encrypted' : 'decrypted'}_data.bin`;
+        a.click();
+        window.URL.revokeObjectURL(a.href);
+        console.log(blobData);
     }
     return (
         <Wrapper>
@@ -153,6 +173,7 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
             </div>
             <div className="io-field">
                 <p>Output Text</p>
+                <span className="gas-button" onClick={() => handleFileSave()}>Save</span>
                 <textarea name="input-text" id="output-text" rows="10"></textarea>
             </div>
         </Wrapper>
