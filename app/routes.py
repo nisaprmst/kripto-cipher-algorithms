@@ -84,10 +84,15 @@ def process():
         sc = supercipher.Superencrypt()
         vg = vigenere_cipher.Vigenere()
         vg.input_key(key[0])
+        vg.set_auto(False)
+        vg.set_extended(False)
+        vg.set_full(False)
         if is_encrypt:
-            result = sc.transpose(vg.encrypt(text))
+            res = ''.join([chr(x) for x in vg.encrypt(text)])
+            result = sc.transpose(res)
         else:
-            result = vg.decrypt(sc.transpose(text))
+            res = sc.transpose(text)
+            result = ''.join([chr(x) for x in vg.decrypt(res)])
         print(result)
     else:
         status = 400

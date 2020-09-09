@@ -15,7 +15,7 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
     const handleFileLoader = (fileNode) => {
         const reader = new FileReader();
         reader.onload = () => {
-            document.getElementById('input-text').value = reader.result.byteLength;
+            document.getElementById('input-text').value = "Loaded file with total size:" + reader.result.byteLength + " bytes";
             const uint8arr = new Uint8Array(reader.result);
             const standardArr = Array.from(uint8arr);
             if (document.querySelector('input[name="v_type"]:checked').value === 'v_extended') {
@@ -104,9 +104,10 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
             if (data.status === 200) {
                 if (data.result instanceof Array) {
                     console.log('Returned data size: ', data.result.length);
-                    const enc = new TextEncoder("utf-8");
-                    // document.getElementById('input-text').value = enc.decode(data.result);
-                    setBlobData(new Blob([data.result]));
+                    // const enc = new TextEncoder("utf-8");
+                    // document.getElementById('output-text').value = enc.decode(data.result);
+                    document.getElementById('output-text').value = "Received data with size: "+ data.result.length + " bytes"
+                    setBlobData(data.result);
                 } else {
                     document.getElementById('output-text').innerText = data.result;
                     setBlobData(data.result);
@@ -124,8 +125,10 @@ const CipherSelector = ({setCipherData, handleSubmit}) => {
     const handleFileSave = () => {
         const a = document.createElement("a");
         document.body.appendChild(a);
+        const ab = new Uint8Array(blobData);
         a.style = 'display: none';
-        const blobDataHere = new Blob([blobData], { type: 'octet/stream'});
+        console.log(ab)
+        const blobDataHere = new Blob([ab], { type: 'application/octet-stream'});
         a.href = window.URL.createObjectURL(blobDataHere);
         a.download = `${isEncryptFile ? 'encrypted' : 'decrypted'}_data.bin`;
         a.click();

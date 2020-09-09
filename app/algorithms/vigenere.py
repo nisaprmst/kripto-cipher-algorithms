@@ -121,6 +121,7 @@ class Vigenere():
             idx_cipher = search_cipher[0][0]
             plaintext += self.matrix[0][idx_cipher]
             key_pos += 1
+        plaintext = [ord(x) for x in plaintext]
         return plaintext
     
     def decrypt_default_key(self, text: str):
@@ -132,12 +133,15 @@ class Vigenere():
         expanded_key = self.expand_key(text)
         # decrypt
         key_pos = 0
-        plaintext = ""
+        plaintext = []
         for letter in text:
             search_key = np.where(self.matrix[:, 0] == expanded_key[key_pos])
             idx_key = search_key[0][0]
             search_cipher = np.where(self.matrix[idx_key] == letter)
             idx_cipher = search_cipher[0][0]
-            plaintext += self.matrix[0][idx_cipher]
+            if self.matrix[0][idx_cipher] == '':
+                plaintext.append(0)
+            else:
+                plaintext.append(ord(self.matrix[0][idx_cipher]))
             key_pos += 1
         return plaintext
